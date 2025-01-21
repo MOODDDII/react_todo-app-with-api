@@ -21,16 +21,14 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   const handleEdit = () => setIsEditing(true);
 
   const handleBlur = () => {
-    if (editTitle.trim() === title) {
-      setIsEditing(false);
-      return;
-    }
-    if (!editTitle.trim()) {
+    const trimmedTitle = editTitle.trim();
+
+    if (!trimmedTitle) {
       onDelete(id);
-    } else {
-      onUpdate(id, { title: editTitle.trim() });
-      setIsEditing(false);
+    } else if (trimmedTitle !== title) {
+      onUpdate(id, { title: trimmedTitle });
     }
+    setIsEditing(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -81,12 +79,14 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             onClick={() => onDelete(id)}
             disabled={isLoading}
           >
-            ×
+            {isLoading ? (
+              <div className="loader loader-delete"></div>
+            ) : (
+              '×'
+            )}
           </button>
         </>
       )}
-
-      {isLoading && <div className="loader"></div>}
     </div>
   );
 };
