@@ -120,6 +120,8 @@ export const App: React.FC = () => {
     }
   });
 
+  const areAllCompleted = todos.length > 0 && todos.every(todo => todo.completed);
+
   if (!userId) {
     return <UserWarning />;
   }
@@ -158,6 +160,7 @@ export const App: React.FC = () => {
           <Header
             onAddTodo={handleAddTodo}
             onMarkAllAsCompleted={handleMarkAllAsCompleted}
+            areAllCompleted={areAllCompleted}
           />
           <TodoList
             todos={filteredTodos}
