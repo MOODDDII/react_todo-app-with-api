@@ -32,6 +32,7 @@ export const App: React.FC = () => {
     if (!title.trim()) {
       setError('Title should not be empty');
       setTimeout(() => setError(''), 3000);
+
       return;
     }
 
@@ -46,6 +47,7 @@ export const App: React.FC = () => {
 
     try {
       const createdTodo = await createTodo(newTodo);
+
       setTodos(prevTodos => [...prevTodos, createdTodo]);
       setTempTodo(null);
     } catch {
@@ -70,14 +72,15 @@ export const App: React.FC = () => {
 
   const handleUpdateTodo = async (
     todoId: number,
-    updates: Partial<Todo>
+    updates: Partial<Todo>,
   ): Promise<void> => {
     try {
       const updatedTodo = await updateTodo(todoId, updates);
+
       setTodos(prevTodos =>
         prevTodos.map(todo =>
-          todo.id === updatedTodo.id ? updatedTodo : todo
-        )
+          todo.id === updatedTodo.id ? updatedTodo : todo,
+        ),
       );
     } catch {
       setError('Unable to update a todo');
@@ -87,7 +90,7 @@ export const App: React.FC = () => {
 
   const handleMarkAllAsCompleted = (): void => {
     setTodos(prevTodos =>
-      prevTodos.map(todo => ({ ...todo, completed: true }))
+      prevTodos.map(todo => ({ ...todo, completed: true })),
     );
   };
 
@@ -98,9 +101,9 @@ export const App: React.FC = () => {
       await Promise.all(
         completedTodos.map(todo =>
           deleteTodo(todo.id).catch(() =>
-            setError('Unable to delete some todos')
-          )
-        )
+            setError('Unable to delete some todos'),
+          ),
+        ),
       );
       setTodos(prevTodos => prevTodos.filter(todo => !todo.completed));
     } catch {
@@ -120,7 +123,8 @@ export const App: React.FC = () => {
     }
   });
 
-  const areAllCompleted = todos.length > 0 && todos.every(todo => todo.completed);
+  const areAllCompleted =
+    todos.length > 0 && todos.every(todo => todo.completed);
 
   if (!userId) {
     return <UserWarning />;
@@ -138,11 +142,7 @@ export const App: React.FC = () => {
 
       {error && (
         <div
-          className={classNames(
-            'notification',
-            'is-danger',
-            'is-light'
-          )}
+          className={classNames('notification', 'is-danger', 'is-light')}
           data-cy="ErrorNotification"
         >
           <button
