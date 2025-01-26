@@ -30,20 +30,12 @@ export const TodoList: React.FC<TodoListProps> = ({
       ))}
 
       {tempTodo && (
-        <div className="todo todo--temp" data-cy="TempTodo">
-          <label className="todo__status-label">
-            <input
-              type="checkbox"
-              className="todo__status"
-              disabled
-              checked={tempTodo.completed}
-            />
-          </label>
-          <span className="todo__title">
-            {tempTodo.title}
-            <div className="loader loader-margin"></div>
-          </span>
-        </div>
+        <TodoItem
+          todo={tempTodo}
+          onDelete={() => {}}
+          onUpdate={() => {}}
+          isLoading={true}
+        />
       )}
     </section>
   );

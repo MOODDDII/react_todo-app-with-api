@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import classNames from 'classnames';
 import { getTodos, createTodo, deleteTodo, updateTodo } from './api/todos';
 import { Todo } from './types/Todo';
 import { Header } from './components/Header';
@@ -7,6 +6,7 @@ import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
 import { Filter } from './types/Filter';
 import { UserWarning } from './UserWarning';
+import { ErrorNotification } from './components/ErrorNotification';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -140,20 +140,7 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {error && (
-        <div
-          className={classNames('notification', 'is-danger', 'is-light')}
-          data-cy="ErrorNotification"
-        >
-          <button
-            type="button"
-            className="delete"
-            onClick={() => setError('')}
-            data-cy="HideErrorButton"
-          />
-          {error}
-        </div>
-      )}
+      <ErrorNotification error={error} onClose={() => setError('')} />
 
       {!isLoading && (
         <>
@@ -169,7 +156,7 @@ export const App: React.FC = () => {
             onUpdateTodo={handleUpdateTodo}
             loadingTodoIds={loadingTodoIds}
           />
-          {todos.length > 0 && (
+          {(todos.length !== 0 && todos.length) && (
             <Footer
               filter={filter}
               setFilter={setFilter}
