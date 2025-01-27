@@ -7,6 +7,8 @@ interface TodoItemProps {
   onDelete: (todoId: number) => void;
   onUpdate: (todoId: number, updates: Partial<Todo>) => void;
   isLoading: boolean;
+  isUpdatingStatus: boolean;
+  isAdding: boolean;
 }
 
 export const TodoItem: React.FC<TodoItemProps> = ({
@@ -14,6 +16,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   onDelete,
   onUpdate,
   isLoading,
+  isUpdatingStatus,
+  isAdding,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
@@ -40,10 +44,13 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     }
   };
 
+  const isDeleting = isLoading;
+  const isChangingStatus = isUpdatingStatus;
+
   return (
     <div
       data-cy="Todo"
-      className={classNames('todo', { completed, loading: isLoading })}
+      className={classNames('todo', { completed, loading: isDeleting || isChangingStatus })}
     >
       <label className="todo__status-label">
         <input
@@ -51,7 +58,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           className="todo__status"
           checked={completed}
           onChange={() => onUpdate(id, { completed: !completed })}
-          disabled={isLoading}
+          disabled={isDeleting || isChangingStatus}
         />
       </label>
 
@@ -67,20 +74,19 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         />
       ) : (
         <>
-          <span
-            className="todo__title"
-            onDoubleClick={handleEdit}
-          >
+          <span className="todo__title" onDoubleClick={handleEdit}>
             {title}
+            {isAdding && !isChangingStatus && <div className="loader loader-margin"></div>}
           </span>
+
           <button
             type="button"
             className="todo__remove"
             onClick={() => onDelete(id)}
-            disabled={isLoading}
+            disabled={isDeleting || isChangingStatus}
             data-cy="TodoDelete"
           >
-            {isLoading ? (
+            {isDeleting || isChangingStatus ? (
               <div className="loader loader-delete"></div>
             ) : (
               '×'

@@ -155,6 +155,7 @@ export const App: React.FC = () => {
             onDeleteTodo={handleDeleteTodo}
             onUpdateTodo={handleUpdateTodo}
             loadingTodoIds={loadingTodoIds}
+            onAddTodo={handleAddTodo}
           />
           {(todos.length !== 0 && todos.length) && (
             <Footer

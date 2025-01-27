@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Todo } from '../types/Todo';
 import { TodoItem } from './TodoItem';
 
@@ -8,6 +8,7 @@ interface TodoListProps {
   onDeleteTodo: (todoId: number) => Promise<void>;
   onUpdateTodo: (todoId: number, updates: Partial<Todo>) => Promise<void>;
   loadingTodoIds: number[];
+  onAddTodo: (title: string) => void;
 }
 
 export const TodoList: React.FC<TodoListProps> = ({
@@ -17,6 +18,15 @@ export const TodoList: React.FC<TodoListProps> = ({
   onUpdateTodo,
   loadingTodoIds,
 }) => {
+  const [updatingStatusTodoId, setUpdatingStatusTodoId] = useState<number | null>(null);
+  const [isAdding] = useState(false);
+
+  const handleToggleStatus = async (todoId: number, currentStatus: boolean) => {
+    setUpdatingStatusTodoId(todoId);
+    await onUpdateTodo(todoId, { completed: !currentStatus });
+    setUpdatingStatusTodoId(null);
+  };
+
   return (
     <section className="todoapp__main" data-cy="TodoList">
       {todos.map(todo => (
@@ -24,8 +34,10 @@ export const TodoList: React.FC<TodoListProps> = ({
           key={todo.id}
           todo={todo}
           onDelete={onDeleteTodo}
-          onUpdate={onUpdateTodo}
+          onUpdate={() => handleToggleStatus(todo.id, todo.completed)}
           isLoading={loadingTodoIds.includes(todo.id)}
+          isUpdatingStatus={updatingStatusTodoId === todo.id}
+          isAdding={isAdding}
         />
       ))}
 
@@ -35,6 +47,8 @@ export const TodoList: React.FC<TodoListProps> = ({
           onDelete={() => {}}
           onUpdate={() => {}}
           isLoading={true}
+          isAdding={true}
+          isUpdatingStatus={false}
         />
       )}
     </section>
