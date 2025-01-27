@@ -78,6 +78,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             className="todo__remove"
             onClick={() => onDelete(id)}
             disabled={isLoading}
+            data-cy="todoDelete"
           >
             {isLoading ? (
               <div className="loader loader-delete"></div>
