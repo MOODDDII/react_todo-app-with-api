@@ -7,6 +7,7 @@ interface FooterProps {
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
   todosCount: number;
   clearCompleted: () => void;
+  completedTodosCount: number;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -14,6 +15,7 @@ export const Footer: React.FC<FooterProps> = ({
   setFilter,
   todosCount,
   clearCompleted,
+  completedTodosCount,
 }) => {
   return (
     <footer className="todoapp__footer" data-cy="Footer">
@@ -24,26 +26,27 @@ export const Footer: React.FC<FooterProps> = ({
       <nav className="filter" data-cy="Filter">
         {Object.values(Filter).map(value => (
           <a
-          key={value}
-          href={`#/${value}`}
-          className={classNames('filter__link', { selected: filter === value })}
-          onClick={() => setFilter(value)}
-          data-cy={`FilterLink${value.charAt(0).toUpperCase() + value.slice(1)}`}
-        >
-          {value.charAt(0).toUpperCase() + value.slice(1)}
-        </a>
+            key={value}
+            href={`#/${value}`}
+            className={classNames('filter__link', { selected: filter === value })}
+            onClick={() => setFilter(value)}
+            data-cy={`FilterLink${value.charAt(0).toUpperCase() + value.slice(1)}`}
+          >
+            {value.charAt(0).toUpperCase() + value.slice(1)}
+          </a>
         ))}
       </nav>
 
-      <button
-        type="button"
-        className="todoapp__clear-completed"
-        data-cy="ClearCompletedButton"
-        onClick={clearCompleted}
-        disabled={todosCount === 0}
-      >
-        Clear completed
-      </button>
+      {completedTodosCount > 0 && (
+        <button
+          type="button"
+          className="todoapp__clear-completed"
+          data-cy="ClearCompletedButton"
+          onClick={clearCompleted}
+        >
+          Clear completed
+        </button>
+      )}
     </footer>
   );
 };

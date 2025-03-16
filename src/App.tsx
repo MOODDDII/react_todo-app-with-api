@@ -123,6 +123,10 @@ export const App: React.FC = () => {
     }
   });
 
+  const completedTodosCount = todos.filter(todo => todo.completed).length;
+
+  const areAnyCompleted = todos.some((todo) => todo.completed);
+
   const areAllCompleted =
     todos.length > 0 && todos.every(todo => todo.completed);
 
@@ -148,6 +152,7 @@ export const App: React.FC = () => {
             onAddTodo={handleAddTodo}
             onMarkAllAsCompleted={handleMarkAllAsCompleted}
             areAllCompleted={areAllCompleted}
+            shouldShowMarkAllButton={!areAnyCompleted}
           />
           <TodoList
             todos={filteredTodos}
@@ -162,6 +167,7 @@ export const App: React.FC = () => {
               filter={filter}
               setFilter={setFilter}
               todosCount={todos.filter(todo => !todo.completed).length}
+              completedTodosCount={completedTodosCount}
               clearCompleted={clearCompleted}
             />
           )}

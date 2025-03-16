@@ -5,12 +5,14 @@ interface HeaderProps {
   onAddTodo: (title: string) => void;
   onMarkAllAsCompleted: (completed: boolean) => void;
   areAllCompleted: boolean;
+  shouldShowMarkAllButton: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onAddTodo,
   onMarkAllAsCompleted,
   areAllCompleted,
+  shouldShowMarkAllButton,
 }) => {
   const [title, setTitle] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,12 +33,14 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="todoapp__header">
-      <button
-        type="button"
-        className={classNames('todoapp__toggle-all', { active: areAllCompleted })}
-        onClick={() => onMarkAllAsCompleted(!areAllCompleted)}
-        data-cy="ToggleAllButton"
-      />
+      {shouldShowMarkAllButton && (
+        <button
+          type="button"
+          className={classNames('todoapp__toggle-all', { active: areAllCompleted })}
+          onClick={() => onMarkAllAsCompleted(!areAllCompleted)}
+          data-cy="ToggleAllButton"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <input
           ref={inputRef}

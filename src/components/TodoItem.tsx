@@ -5,7 +5,7 @@ import { Todo } from '../types/Todo';
 interface TodoItemProps {
   todo: Todo;
   onDelete: (todoId: number) => void;
-  onUpdate: (todoId: number, updates: Partial<Todo>) => void;
+  onUpdate: (todoId: number, updates: Partial<Todo>) => Promise<void>;
   isLoading: boolean;
   isUpdatingStatus: boolean;
   isAdding: boolean;
@@ -21,6 +21,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleEdit = () => setIsEditing(true);
 
@@ -29,10 +31,19 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
     if (!trimmedTitle) {
       onDelete(id);
-    } else if (trimmedTitle !== title) {
-      onUpdate(id, { title: trimmedTitle });
+    } else {
+      setIsSubmitting(true);
+
+      onUpdate(id, { title: trimmedTitle, completed })
+        .then(() => {
+          setIsEditing(false);
+          setIsSubmitting(false);
+        })
+        .catch(() => {
+          setError('Unable to update a todo');
+          setIsSubmitting(false);
+        });
     }
-    setIsEditing(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -44,21 +55,25 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     }
   };
 
-  const isDeleting = isLoading;
-  const isChangingStatus = isUpdatingStatus;
+  const isCurrentlySubmitting = isSubmitting || isLoading || isUpdatingStatus;
 
   return (
     <div
       data-cy="Todo"
-      className={classNames('todo', { completed, loading: isDeleting || isChangingStatus })}
+      className={classNames('todo', {
+        completed,
+        loading: isCurrentlySubmitting,
+      })}
     >
       <label className="todo__status-label">
         <input
           type="checkbox"
           className="todo__status"
           checked={completed}
-          onChange={() => onUpdate(id, { completed: !completed })}
-          disabled={isDeleting || isChangingStatus}
+          onChange={() => {
+            onUpdate(id, { completed: !completed });
+          }}
+          disabled={isCurrentlySubmitting}
         />
       </label>
 
@@ -67,7 +82,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           type="text"
           className="todo__edit"
           value={editTitle}
-          onChange={(e) => setEditTitle(e.target.value)}
+          onChange={e => setEditTitle(e.target.value)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           autoFocus
@@ -76,17 +91,19 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         <>
           <span className="todo__title" onDoubleClick={handleEdit}>
             {title}
-            {isAdding && !isChangingStatus && <div className="loader loader-margin"></div>}
+            {isAdding && !isCurrentlySubmitting && (
+              <div className="loader loader-margin"></div>
+            )}
           </span>
 
           <button
             type="button"
             className="todo__remove"
             onClick={() => onDelete(id)}
-            disabled={isDeleting || isChangingStatus}
+            disabled={isCurrentlySubmitting}
             data-cy="TodoDelete"
           >
-            {isDeleting || isChangingStatus ? (
+            {isCurrentlySubmitting ? (
               <div className="loader loader-delete"></div>
             ) : (
               '×'
@@ -94,6 +111,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           </button>
         </>
       )}
+
+      {error && <div className="error-notification">{error}</div>}
     </div>
   );
 };

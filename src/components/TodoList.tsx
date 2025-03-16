@@ -18,13 +18,14 @@ export const TodoList: React.FC<TodoListProps> = ({
   onUpdateTodo,
   loadingTodoIds,
 }) => {
-  const [updatingStatusTodoId, setUpdatingStatusTodoId] = useState<number | null>(null);
   const [isAdding] = useState(false);
 
-  const handleToggleStatus = async (todoId: number, currentStatus: boolean) => {
-    setUpdatingStatusTodoId(todoId);
-    await onUpdateTodo(todoId, { completed: !currentStatus });
-    setUpdatingStatusTodoId(null);
+  const handleUpdateTodo = async (todoId: number, updates: Partial<Todo>) => {
+    try {
+      await onUpdateTodo(todoId, { ...updates, completed: true });
+    } catch (error) {
+      console.error('Error updating todo:', error);
+    }
   };
 
   return (
@@ -34,18 +35,18 @@ export const TodoList: React.FC<TodoListProps> = ({
           key={todo.id}
           todo={todo}
           onDelete={onDeleteTodo}
-          onUpdate={() => handleToggleStatus(todo.id, todo.completed)}
+          onUpdate={handleUpdateTodo}
           isLoading={loadingTodoIds.includes(todo.id)}
-          isUpdatingStatus={updatingStatusTodoId === todo.id}
           isAdding={isAdding}
+          isUpdatingStatus={false}
         />
       ))}
 
       {tempTodo && (
         <TodoItem
           todo={tempTodo}
-          onDelete={() => {}}
-          onUpdate={() => {}}
+          onDelete={onDeleteTodo}
+          onUpdate={handleUpdateTodo}
           isLoading={true}
           isAdding={true}
           isUpdatingStatus={false}
