@@ -25,7 +25,10 @@ export const Header: React.FC<HeaderProps> = ({
     e.preventDefault();
     const trimmedTitle = title.trim();
 
-    if (!trimmedTitle) return;
+    if (!trimmedTitle) {
+      onAddTodo('');
+      return;
+    }
 
     onAddTodo(trimmedTitle);
     setTitle('');

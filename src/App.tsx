@@ -29,17 +29,18 @@ export const App: React.FC = () => {
   }, []);
 
   const handleAddTodo = async (title: string): Promise<void> => {
-    if (!title.trim()) {
-      setError('Title should not be empty');
-      setTimeout(() => setError(''), 3000);
+    const trimmedTitle = title.trim();
 
+    if (!trimmedTitle) {
+      setError('Title should not be empty');
+      setTimeout(() => setError(''), 1000);
       return;
     }
 
     const newTodo: Todo = {
       id: 0,
       userId,
-      title: title.trim(),
+      title: trimmedTitle,
       completed: false,
     };
 
@@ -47,13 +48,11 @@ export const App: React.FC = () => {
 
     try {
       const createdTodo = await createTodo(newTodo);
-
       setTodos(prevTodos => [...prevTodos, createdTodo]);
       setTempTodo(null);
     } catch {
       setError('Unable to add a todo');
       setTempTodo(null);
-      setTimeout(() => setError(''), 3000);
     }
   };
 
@@ -125,7 +124,7 @@ export const App: React.FC = () => {
 
   const completedTodosCount = todos.filter(todo => todo.completed).length;
 
-  const areAnyCompleted = todos.some((todo) => todo.completed);
+  const areAnyCompleted = todos.some(todo => todo.completed);
 
   const areAllCompleted =
     todos.length > 0 && todos.every(todo => todo.completed);
@@ -144,8 +143,6 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      <ErrorNotification error={error} onClose={() => setError('')} />
-
       {!isLoading && (
         <>
           <Header
@@ -162,7 +159,7 @@ export const App: React.FC = () => {
             loadingTodoIds={loadingTodoIds}
             onAddTodo={handleAddTodo}
           />
-          {(todos.length !== 0 && todos.length) && (
+          {todos.length !== 0 && todos.length && (
             <Footer
               filter={filter}
               setFilter={setFilter}
@@ -173,6 +170,8 @@ export const App: React.FC = () => {
           )}
         </>
       )}
+
+      <ErrorNotification error={error} onClose={() => setError('')} />
     </div>
   );
 };

@@ -37,10 +37,19 @@ export const Footer: React.FC<FooterProps> = ({
         ))}
       </nav>
 
-      {completedTodosCount > 0 && (
+      {completedTodosCount > 0 ? (
         <button
           type="button"
           className="todoapp__clear-completed"
+          data-cy="ClearCompletedButton"
+          onClick={clearCompleted}
+        >
+          Clear completed
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="todoapp__clear-completed hiddenBtn"
           data-cy="ClearCompletedButton"
           onClick={clearCompleted}
         >

@@ -70,9 +70,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           type="checkbox"
           className="todo__status"
           checked={completed}
-          onChange={() => {
-            onUpdate(id, { completed: !completed });
-          }}
+          onChange={() => onUpdate(id, { completed: !completed })}
           disabled={isCurrentlySubmitting}
         />
       </label>
@@ -86,6 +84,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           autoFocus
+          placeholder='Empty todo will be deleted'
         />
       ) : (
         <>

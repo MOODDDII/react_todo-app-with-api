@@ -52,6 +52,14 @@
     text-decoration: line-through;
   }
 
+  &__edit {
+    &::placeholder {
+      font-style: italic;
+      font-weight: 300;
+      color: #e6e6e6;
+    }
+  }
+
   &__remove {
     position: absolute;
     right: 12px;

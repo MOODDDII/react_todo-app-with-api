@@ -22,7 +22,7 @@ export const TodoList: React.FC<TodoListProps> = ({
 
   const handleUpdateTodo = async (todoId: number, updates: Partial<Todo>) => {
     try {
-      await onUpdateTodo(todoId, { ...updates, completed: true });
+      await onUpdateTodo(todoId, updates);
     } catch (error) {
       console.error('Error updating todo:', error);
     }

@@ -10,11 +10,11 @@ export const ErrorNotification: React.FC<ErrorNotificationProps> = ({
   error,
   onClose,
 }) => {
+  if (!error) return null;
+
   return (
     <div
-      className={classNames('notification', 'is-danger', 'is-light', {
-        hidden: !error,
-      })}
+      className={classNames('notification', 'is-danger', 'is-light')}
       data-cy="ErrorNotification"
     >
       <button
