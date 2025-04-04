@@ -33,7 +33,6 @@ export const TodoItem: React.FC<TodoItemProps> = ({
       onDelete(id);
     } else {
       setIsSubmitting(true);
-
       onUpdate(id, { title: trimmedTitle, completed })
         .then(() => {
           setIsEditing(false);
@@ -44,6 +43,10 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           setIsSubmitting(false);
         });
     }
+  };
+
+  const handleToggle = () => {
+    onUpdate(id, { completed: !completed });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -70,7 +73,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           type="checkbox"
           className="todo__status"
           checked={completed}
-          onChange={() => onUpdate(id, { completed: !completed })}
+          onChange={handleToggle}
           disabled={isCurrentlySubmitting}
         />
       </label>

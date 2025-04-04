@@ -38,7 +38,7 @@ export const TodoList: React.FC<TodoListProps> = ({
           onUpdate={handleUpdateTodo}
           isLoading={loadingTodoIds.includes(todo.id)}
           isAdding={isAdding}
-          isUpdatingStatus={false}
+          isUpdatingStatus={loadingTodoIds.includes(todo.id)}
         />
       ))}
 
@@ -49,7 +49,7 @@ export const TodoList: React.FC<TodoListProps> = ({
           onUpdate={handleUpdateTodo}
           isLoading={true}
           isAdding={true}
-          isUpdatingStatus={false}
+          isUpdatingStatus={true}
         />
       )}
     </section>

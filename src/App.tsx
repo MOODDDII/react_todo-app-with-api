@@ -73,6 +73,8 @@ export const App: React.FC = () => {
     todoId: number,
     updates: Partial<Todo>,
   ): Promise<void> => {
+    setLoadingTodoIds(prev => [...prev, todoId]);
+
     try {
       const updatedTodo = await updateTodo(todoId, updates);
 
@@ -84,6 +86,8 @@ export const App: React.FC = () => {
     } catch {
       setError('Unable to update a todo');
       setTimeout(() => setError(''), 3000);
+    } finally {
+      setLoadingTodoIds(prev => prev.filter(id => id !== todoId));
     }
   };
 

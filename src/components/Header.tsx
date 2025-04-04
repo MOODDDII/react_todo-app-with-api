@@ -12,7 +12,6 @@ export const Header: React.FC<HeaderProps> = ({
   onAddTodo,
   onMarkAllAsCompleted,
   areAllCompleted,
-  shouldShowMarkAllButton,
 }) => {
   const [title, setTitle] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,14 +35,14 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="todoapp__header">
-      {shouldShowMarkAllButton && (
-        <button
-          type="button"
-          className={classNames('todoapp__toggle-all', { active: areAllCompleted })}
-          onClick={() => onMarkAllAsCompleted(!areAllCompleted)}
-          data-cy="ToggleAllButton"
-        />
-      )}
+      <button
+        type="button"
+        className={classNames('todoapp__toggle-all', {
+          active: areAllCompleted,
+        })}
+        onClick={() => onMarkAllAsCompleted(!areAllCompleted)}
+        data-cy="ToggleAllButton"
+      />
       <form onSubmit={handleSubmit}>
         <input
           ref={inputRef}
@@ -51,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
           placeholder="What needs to be done?"
           className="todoapp__new-todo"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e => setTitle(e.target.value)}
           data-cy="NewTodoField"
         />
       </form>
