@@ -22,6 +22,12 @@ body {
   pointer-events: none;
 }
 
+.loader {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 @import "./todoapp";
 @import "./todo";
 @import "./filter";

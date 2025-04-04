@@ -91,10 +91,33 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleMarkAllAsCompleted = (): void => {
-    setTodos(prevTodos =>
-      prevTodos.map(todo => ({ ...todo, completed: true })),
-    );
+  const handleMarkAllAsCompleted = async (completed: boolean): Promise<void> => {
+    const idsToUpdate = todos
+      .filter(todo => todo.completed !== completed)
+      .map(todo => todo.id);
+
+    if (idsToUpdate.length === 0) return;
+
+    setLoadingTodoIds(prev => [...prev, ...idsToUpdate]);
+
+    try {
+      const updatedTodos = await Promise.all(
+        todos.map(todo => {
+          if (todo.completed !== completed) {
+            return updateTodo(todo.id, { completed });
+          }
+
+          return Promise.resolve(todo);
+        })
+      );
+
+      setTodos(updatedTodos);
+    } catch {
+      setError('Unable to update all todos');
+      setTimeout(() => setError(''), 3000);
+    } finally {
+      setLoadingTodoIds(prev => prev.filter(id => !idsToUpdate.includes(id)));
+    }
   };
 
   const clearCompleted = async (): Promise<void> => {

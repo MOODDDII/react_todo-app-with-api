@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Todo } from '../types/Todo';
 import { TodoItem } from './TodoItem';
 
@@ -18,8 +18,6 @@ export const TodoList: React.FC<TodoListProps> = ({
   onUpdateTodo,
   loadingTodoIds,
 }) => {
-  const [isAdding] = useState(false);
-
   const handleUpdateTodo = async (todoId: number, updates: Partial<Todo>) => {
     try {
       await onUpdateTodo(todoId, updates);
@@ -37,7 +35,7 @@ export const TodoList: React.FC<TodoListProps> = ({
           onDelete={onDeleteTodo}
           onUpdate={handleUpdateTodo}
           isLoading={loadingTodoIds.includes(todo.id)}
-          isAdding={isAdding}
+          isAdding={false}
           isUpdatingStatus={loadingTodoIds.includes(todo.id)}
         />
       ))}

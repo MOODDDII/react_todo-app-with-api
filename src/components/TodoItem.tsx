@@ -87,14 +87,14 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           autoFocus
-          placeholder='Empty todo will be deleted'
+          placeholder="Empty todo will be deleted"
         />
       ) : (
         <>
           <span className="todo__title" onDoubleClick={handleEdit}>
             {title}
-            {isAdding && !isCurrentlySubmitting && (
-              <div className="loader loader-margin"></div>
+            {(isCurrentlySubmitting || isAdding) && (
+              <div className="loader" />
             )}
           </span>
 
@@ -105,11 +105,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             disabled={isCurrentlySubmitting}
             data-cy="TodoDelete"
           >
-            {isCurrentlySubmitting ? (
-              <div className="loader loader-delete"></div>
-            ) : (
-              '×'
-            )}
+            { !isCurrentlySubmitting && '×' }
           </button>
         </>
       )}
